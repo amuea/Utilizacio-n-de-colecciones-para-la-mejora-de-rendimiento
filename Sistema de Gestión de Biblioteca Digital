@@ -1,0 +1,85 @@
+# Definición de la clase Libro
+# Esta clase modela un libro con atributos como título, autor, categoría e ISBN.
+class Libro:
+    def __init__(self, isbn, titulo, autor, categoria):
+        # Tupla para atributos inmutables
+        self.info = (titulo, autor)
+        self.categoria = categoria
+
+    def __str__(self):
+        return f"ISBN: {self.info[0]}, Título: {self.info[1]}, Autor: {self.info[2]}, Categoría: {self.categoria}"
+
+# Definición de la clase Usuario
+# Esta clase modela un usuario con atributos como nombre, ID de usuario (único).
+class Usuario:
+    def __init__(self, id_usuario, nombre):
+        self.id_usuario = id_usuario
+        self.nombre = nombre
+        # Lista para gestionar libros prestados
+        self.libros_prestados = []
+
+    def prestar_libro(self, libro):
+        self.libros_prestados.append(libro)
+
+    def devolver_libro(self, isbn):
+        for libro in self.libros_prestados:
+            if libro.info[0] == isbn:
+                self.libros_prestados.remove(libro)
+                return libro
+        return None
+
+    def __str__(self):
+        return f"Usuario: {self.id_usuario}, Nombre: {self.nombre}, Libros Prestados: {[libro.info[1] for libro in self.libros_prestados]}"
+
+# Definición de la clase Biblioteca
+# Esta clase modela una biblioteca con colecciones de libros, usuarios y préstamos.
+class Biblioteca:
+    def __init__(self):
+        # Diccionario para almacenar libros disponibles
+        self.libros = {}
+        # Conjunto para IDs de usuario únicos
+        self.usuarios = set()
+    
+    # Método para añadir libros de la biblioteca
+    def añadir_libro(self, libro):
+        self.libros[libro.info[0]] = libro
+
+    # Método para quitar libros de la biblioteca
+    def quitar_libro(self, isbn):
+        if isbn in self.libros:
+            del self.libros[isbn]
+
+    # Método para registrar nuevos usuarios
+    def registrar_usuario(self, usuario):
+        if usuario.id_usuario not in self.usuarios:
+            self.usuarios.add(usuario.id_usuario)
+
+    # Método para prestar libros a usuarios
+    def prestar_libro(self, id_usuario, isbn):
+        if id_usuario in self.usuarios and isbn in self.libros:
+            # Simulación de la lógica de préstamo
+            print(f"Libro {isbn} prestado al usuario {id_usuario}.")
+
+    # Método para buscar libros
+    def buscar_libro(self, titulo, autor, categoria):
+        return self.libros.get(titulo, autor, categoria, "Libro no encontrado.")
+
+    # Método para mostrar libros
+    def mostrar_libros(self):
+        for isbn, libro in self.libros.items():
+            print(libro)
+
+# Ejemplo de uso
+libro1 = Libro("978-2-409-00614-2", "Python 3: los fundamentos del lenguaje", "Sébastien Chazallet", "Programación")
+usuario1 = Usuario("01", "Angela Torres")
+biblioteca = Biblioteca()
+biblioteca.añadir_libro(libro1)
+biblioteca.registrar_usuario(usuario1)
+
+usuario1.prestar_libro(libro1)
+usuario1.devolver_libro(libro1)
+print(usuario1)
+biblioteca.prestar_libro("01", "978-2-409-00614-2")
+biblioteca.devolver_libro("01", "978-2-409-00614-2")
+biblioteca.buscar_libro(Libro1)
+biblioteca.mostrar_libros()
